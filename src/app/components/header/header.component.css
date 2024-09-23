@@ -1,0 +1,31 @@
+.headerContainer{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.logoAndTitle{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.logo{
+    height: 35px;
+    width: 40px;
+    margin-left: 5px;
+}
+
+.headline{
+    margin: 0;
+}
+
+.btnSignUp{
+    background-color: #2476f1;
+    border-radius: 25px;
+    border: none;
+    margin-right: 5px;
+    padding: 15px;
+    color: lightgrey;
+}
