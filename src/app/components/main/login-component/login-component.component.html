@@ -1,12 +1,13 @@
-<div class="loginContainer">
+<form class="loginContainer" [formGroup]="loginForm" (ngSubmit)="login()">
     <div class="inputsContainer">
         <label for="username">Username: </label>
-        <input id="username" class="inputBox" type="text">
+        <input formControlName="username" id="username" class="inputBox" type="text" placeholder="Username">
         <br>
         <label for="password">Password: </label>
-        <input id="password" class="inputBox" type="password">
+        <input formControlName="password" id="password" class="inputBox" type="password" placeholder="Password">
     </div>
-    <div>
-        <button class="submitBtn" type="submit">LogIn</button>
+    <div class="errAndBtnContainer">
+        <p *ngIf="loginFail" class="errMsg">*Incorrect username or password</p>
+        <button [disabled]="loginForm.invalid" class="submitBtn" type="submit">LogIn</button>
     </div>
-</div>
+</form>

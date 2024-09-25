@@ -3,7 +3,7 @@
     justify-content: center;
 }
 
-.loginContainer{
+.signupContainer{
     margin-top: 30px;
     display: flex;
     flex-direction: column;
@@ -47,6 +47,7 @@
     color: #e4a3a3;
     margin: 0;
     margin-bottom: 5px;
+    font-size: 0.75rem;
 }
 
 .errAndBtnContainer{
@@ -54,3 +55,4 @@
     flex-direction: column;
     align-items: center;
 }
+

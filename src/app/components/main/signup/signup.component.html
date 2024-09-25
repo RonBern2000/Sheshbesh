@@ -1,0 +1,31 @@
+<form class="signupContainer" [formGroup]="signupForm" (ngSubmit)="signup()">
+    <div class="inputsContainer">
+        <label for="username">Username: </label>
+        <input formControlName="username" id="username" class="inputBox" type="text" placeholder="Username" maxlength="30">
+        <p class="errMsg" *ngIf="signupForm.get('username')?.hasError('required')">*Username is required.</p>
+        <p class="errMsg" *ngIf="signupForm.get('username')?.hasError('minlength')">*Username must be at least 2 characters long.</p>
+        <p class="errMsg" *ngIf="signupForm.get('username')?.hasError('maxlength')">*Username cannot exceed 30 characters.</p>
+        <p class="errMsg" *ngIf="signupForm.get('username')?.hasError('pattern')">*Username can only contain English letters, numbers, and underscores.</p>
+        <br>
+        <label for="password">Password: </label>
+        <input formControlName="password" id="password" class="inputBox" type="password" placeholder="Password" maxlength="30">
+        <p class="errMsg" *ngIf="signupForm.get('password')?.hasError('required')">*Password is required.</p>
+        <p class="errMsg" *ngIf="signupForm.get('password')?.hasError('minlength')">*Password must be at least 4 characters long.</p>
+        <p class="errMsg" *ngIf="signupForm.get('password')?.hasError('maxlength')">*Password cannot exceed 30 characters.</p>
+        <p class="errMsg" *ngIf="signupForm.get('password')?.hasError('pattern')">*Password must contain at least one uppercase, lowercase letter and one digit.</p>
+        <br>
+        <label for="cPassword">Confirm password: </label>
+        <input formControlName="cPassword" id="cPassword" class="inputBox" type="password" placeholder="Confirm password" maxlength="30">
+        <p class="errMsg" *ngIf="signupForm.get('cPassword')?.hasError('required')">*Confirm password is required.</p>
+        <p class="errMsg" *ngIf="!passwordMatch">*Passwords must match.</p>
+        <br>
+        <label for="email">Email: </label>
+        <input formControlName="email" id="email" class="inputBox" type="text" placeholder="Email" maxlength="70">
+        <p class="errMsg" *ngIf="signupForm.get('email')?.hasError('required')">*Email is required.</p>
+        <p class="errMsg" *ngIf="signupForm.get('email')?.hasError('maxlength')">*Email cannot exceed 70 characters.</p>
+        <p class="errMsg" *ngIf="signupForm.get('email')?.hasError('pattern')">*Email must match email pattern.</p>
+    </div>
+    <div class="errAndBtnContainer">
+        <button [disabled]="signupForm.invalid" class="submitBtn" type="submit">SignUp</button>
+    </div>
+</form>
