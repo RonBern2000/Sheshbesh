@@ -12,6 +12,7 @@ import { UserHttpApiService } from '../../../services/user-http-api.service';
 import { CommonModule } from '@angular/common';
 import { matchPasswordsValidator } from '../../../shared/validators/match-passwords.validator';
 import { Router } from '@angular/router';
+import { AuthUserService } from '../../../services/auth-user.service';
 
 @Component({
   selector: 'signup-component',
@@ -28,7 +29,7 @@ export class SignupComponent implements OnInit {
 
   newUser: SignupUser = new SignupUser();
 
-  constructor(private userHttpService:UserHttpApiService, private renderer:Renderer2, private fb: FormBuilder, private router:Router){}
+  constructor(private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer:Renderer2, private fb: FormBuilder, private router:Router){}
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
@@ -61,6 +62,11 @@ export class SignupComponent implements OnInit {
     this.renderer.addClass(rootElement, 'loginComponent');
   }
 
+  onChange() {
+    if(!this.passwordMatch)
+      this.passwordMatch = !this.passwordMatch;
+  }
+
   signup():void{
     if(!matchPasswordsValidator(this.signupForm.value.password,this.signupForm.value.cPassword)){
       this.passwordMatch = !this.passwordMatch;
@@ -73,19 +79,28 @@ export class SignupComponent implements OnInit {
 
     this.userHttpService.createUser(this.newUser).subscribe({
       next: (res) =>  {
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
         this.passwordMatch = !this.passwordMatch;
         this.router.navigate(['/chatHub']);
+        this.resetForm();
       },
       error: () => {
+        // TODO: do logging
         this.passwordMatch = !this.passwordMatch;
-         // TODO: do logging
+        this.resetForm();
       }
     });
+  }
+  private resetForm():void{
     this.signupForm.reset({
-      username: '',
-      password: '',
-      cPassword: '',
-      email: ''
-    });
+          username: '',
+          password: '',
+          cPassword: '',
+          email: ''
+        });
   }
 }

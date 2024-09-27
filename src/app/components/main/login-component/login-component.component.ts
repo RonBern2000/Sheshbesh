@@ -11,6 +11,7 @@ import { UserHttpApiService } from '../../../services/user-http-api.service';
 import { LoginUser } from '../../../shared/models/LoginUser';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthUserService } from '../../../services/auth-user.service';
 
 @Component({
   selector: 'login-component',
@@ -27,7 +28,7 @@ export class LoginComponentComponent implements OnInit{
 
   loginFail: boolean = false;
 
-  constructor(private userHttpService:UserHttpApiService, private renderer: Renderer2, private fb: FormBuilder, private router: Router){}
+  constructor(private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer: Renderer2, private fb: FormBuilder, private router: Router){}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -49,20 +50,30 @@ export class LoginComponentComponent implements OnInit{
     this.loginUser.username = this.loginForm.value.username;
     this.loginUser.password = this.loginForm.value.password;
 
-    this.userHttpService.getUser(this.loginUser).subscribe({
-      next: () =>  {
+    this.userHttpService.login(this.loginUser).subscribe({
+      next: (res) =>  {
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
         if(this.loginFail)
           this.loginFail = !this.loginFail;
         this.router.navigate(['/chatHub']);
+        this.resetFrom();
       },
       error: () => {
+        // TODO: do logging
         this.loginFail = !this.loginFail;
-         // TODO: do logging
+        this.resetFrom();
       }
     });
+  }
+  
+  private resetFrom():void{
     this.loginForm.reset({
-      username: '',
-      password: ''
-    });
+          username: '',
+          password: ''
+        });
   }
 }
