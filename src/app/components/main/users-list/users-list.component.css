@@ -1,0 +1,18 @@
+.dataContainer {
+  height: 300px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 20px;
+  width: 100px;
+}
+
+.dataItem {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.loading {
+  text-align: center;
+  padding: 10px;
+}

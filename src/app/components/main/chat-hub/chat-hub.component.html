@@ -1,14 +1,33 @@
 <div class="container">
+    <h2 class="gcTitle">Global chat:</h2>
     <div class="chatContainer">
-        <div class="messageList">
-            <div *ngFor="let message of messages">
-            <p>{{ message }}</p>
-            </div>
+        <div #messageList class="messageList">
+            <ng-container *ngFor="let msg of messages">
+                <p class="message">{{ msg.username }}: {{ msg.message }}</p>
+            </ng-container>
         </div>
 
         <div class="messageInput">
             <input [(ngModel)]="newMessage" placeholder="Type a message..." />
             <button (click)="sendMessage(newMessage)">Chat</button>
+        </div>
+    </div>
+    <div class="dmContainer">
+        <div class="usersContainer">
+            <h3 class="allUsersTitles">All users:</h3>
+            <users-list (usernameClicked)="onUsernameClicked($event)"/>
+        </div>
+        <div class="dmChat">
+            <h3 class="allUsersTitles">Dm chat:</h3>
+            <div class="dmMessageList">
+                <ng-container *ngFor="let msg of dmMessages">
+                <p class="message">{{ msg.username }}: {{ msg.message }}</p>
+            </ng-container>
+            </div>
+            <div class="messageInput">
+                <input [(ngModel)]="newDmMessage" placeholder="Type a message..." />
+                <button (click)="sendDmMessage(newDmMessage)">Chat</button>
+            </div>
         </div>
     </div>
 </div>

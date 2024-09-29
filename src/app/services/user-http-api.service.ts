@@ -14,7 +14,11 @@ export class UserHttpApiService {
 
   private apiUrl:string = `${environment.apiBaseUrl}/api/User`;
 
-  constructor(private authUser:AuthUserService,private http:HttpClient, private cookie: CookieService) { }
+  constructor(private authUser:AuthUserService,private http:HttpClient) { }
+
+   getAllUsers(page: number, pageSize: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/allUsers?page=${page}&size=${pageSize}`);
+  }
 
   login(loginUser:LoginUser):Observable<any>{
     return this.http.post<void>(`${this.apiUrl}/login`,loginUser,{ withCredentials: true})

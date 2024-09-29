@@ -12,7 +12,9 @@ export class SignalRService {
 
   private hubConnection!: signalR.HubConnection;
 
-  private messageSubject = new Subject<string>();
+  private globalMessageSubject = new Subject<{ username: string, message: string }>();
+
+  private messageSubject = new Subject<{username: string, message: string }>();
 
   constructor() {
     this.createConnection();
@@ -21,23 +23,28 @@ export class SignalRService {
    private createConnection():void{
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${this.apiUrl}`)
+      .configureLogging(signalR.LogLevel.Information)
       .build();
 
-      this.hubConnection.on('ReceiveMessage', (message: string) => {
-      this.messageSubject.next(message);
-    });
+      this.hubConnection.on('ReceiveMessage', (username:string ,message: string) => {
+        this.globalMessageSubject.next({username, message});
+      });
 
-    this.hubConnection.onclose(() => {
-      console.log('SignalR connection closed.'); // TODO: Logging
-    });
+      this.hubConnection.on('ReceiveGroupMessage', (username,message:string)=>{
+        this.messageSubject.next({username, message});
+      });
 
-    this.hubConnection.onreconnected(() => {
-      console.log('SignalR connection reestablished.'); // TODO: Logging
-    });
+      this.hubConnection.onclose(() => {
+        console.log('SignalR connection closed.'); // TODO: Logging
+      });
 
-    this.hubConnection.onreconnecting(() => {
-      console.log('SignalR connection is reconnecting.'); // TODO: Logging
-    });
+      this.hubConnection.onreconnected(() => {
+        console.log('SignalR connection reestablished.'); // TODO: Logging
+      });
+
+      this.hubConnection.onreconnecting(() => {
+        console.log('SignalR connection is reconnecting.'); // TODO: Logging
+      });
    
     }
 
@@ -63,14 +70,48 @@ export class SignalRService {
     });
    }
 
-   receiveMessage():Observable<string>{
+   receiveMessage():Observable<{ username: string, message: string }>{
+    return this.globalMessageSubject.asObservable();
+   }
+
+   receiveGroupMessage():Observable<{username: string,message: string }>{
     return this.messageSubject.asObservable();
    }
 
-   sendMessage(message:string):void{
+   sendMessage(username:string ,message:string):void{
     if(this.hubConnection.state === signalR.HubConnectionState.Connected){
-      this.hubConnection.invoke('SendMessage', message)
+      this.hubConnection.invoke('SendMessage',username, message)
         .then(() => console.log('Message sent'))
+        .catch(err => console.error('Error sending message:', err));
+    } else {
+      console.error('Cannot send message, SignalR is not connected.');
+    }
+   }
+
+   sendGroupMessage(username1: string, username2:string, message:string){
+    if(this.hubConnection.state === signalR.HubConnectionState.Connected){
+      this.hubConnection.invoke('SendGroupMessage',username1, username2, message)
+        .then(() => console.log('Message sent'))
+        .catch(err => console.error('Error sending message:', err));
+    } else {
+      console.error('Cannot send message, SignalR is not connected.');
+    }
+   }
+
+   joinRoom(username1:string, username2:string){
+    if(this.hubConnection.state === signalR.HubConnectionState.Connected){
+      this.hubConnection.invoke('JoinRoom',username1, username2)
+        .then(() => console.log('Connected To group'))
+        .catch(err => console.error('Error sending message:', err));
+    } else {
+      console.error('Cannot send message, SignalR is not connected.');
+    }
+   }
+
+   leaveRoom(username1:string, username2:string){
+    if(this.hubConnection.state === signalR.HubConnectionState.Connected){
+      this.hubConnection.invoke('LeaveRoom',username1, username2)
+        .then(() => console.log('Left a group'))
         .catch(err => console.error('Error sending message:', err));
     } else {
       console.error('Cannot send message, SignalR is not connected.');

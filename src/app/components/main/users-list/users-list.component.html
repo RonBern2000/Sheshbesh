@@ -1,0 +1,11 @@
+<div class="dataContainer" infiniteScroll
+     [infiniteScrollDistance]="2"
+     [infiniteScrollThrottle]="150"
+     (scrolled)="onScroll()"
+     [scrollWindow]="false">
+  <div *ngFor="let item of data" class="dataItem" (click)="joinRoom(item.username)">
+    {{ item.username }}
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading...</div>
+</div>
