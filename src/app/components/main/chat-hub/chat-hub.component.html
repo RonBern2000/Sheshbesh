@@ -1,4 +1,5 @@
 <div class="container">
+    <button class="playButton" (click)="navigateToGame()">Play</button>
     <h2 class="gcTitle">Global chat:</h2>
     <div class="chatContainer">
         <div #messageList class="messageList">
@@ -19,10 +20,10 @@
         </div>
         <div class="dmChat">
             <h3 class="allUsersTitles">Dm chat:</h3>
-            <div class="dmMessageList">
+            <div #dmMessageList class="dmMessageList">
                 <ng-container *ngFor="let msg of dmMessages">
-                <p class="message">{{ msg.username }}: {{ msg.message }}</p>
-            </ng-container>
+                    <p class="message">{{ msg.username }}: {{ msg.message }}</p>
+                </ng-container>
             </div>
             <div class="messageInput">
                 <input [(ngModel)]="newDmMessage" placeholder="Type a message..." />

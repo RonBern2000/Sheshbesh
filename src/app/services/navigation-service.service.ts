@@ -7,7 +7,7 @@ export class NavigationServiceService {
   private routeConfig:{ [key: string]: { btnText: string; targetRoute: string } } = {
     '/signup': { btnText: 'Login', targetRoute: '' },
     '/chatHub': { btnText: 'Logout', targetRoute: '' },
-    '/game': { btnText: 'Logout', targetRoute: '' },
+    '/sheshbeshHub': { btnText: 'Logout', targetRoute: '' },
     '': { btnText: 'Sign Up', targetRoute: '/signup' }
   };
 

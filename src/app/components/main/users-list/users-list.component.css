@@ -10,9 +10,16 @@
 .dataItem {
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .loading {
   text-align: center;
   padding: 10px;
+}
+
+.highlighted {
+  background-color: rgb(65, 124, 65); 
+  font-weight: bold;
+  border-radius: 5px;
 }

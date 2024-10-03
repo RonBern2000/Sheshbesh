@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class SignalRService {
+export class ChatSignalRService {
 
   private apiUrl:string = `${environment.apiBaseUrl}/chatHub`;
 
@@ -30,12 +30,16 @@ export class SignalRService {
         this.globalMessageSubject.next({username, message});
       });
 
-      this.hubConnection.on('ReceiveGroupMessage', (username,message:string)=>{
+      this.hubConnection.on('ReceiveGroupMessage', (username, message:string)=>{
         this.messageSubject.next({username, message});
       });
 
+       this.hubConnection.on('Userleft', (username: string) => {
+        console.log(`${username} has left the group.`);
+    });
+
       this.hubConnection.onclose(() => {
-        console.log('SignalR connection closed.'); // TODO: Logging
+        console.log('Chat SignalR connection closed.'); // TODO: Logging
       });
 
       this.hubConnection.onreconnected(() => {
@@ -54,7 +58,7 @@ export class SignalRService {
         this.hubConnection
         .start()
         .then(()=>{
-          console.log('SignalR connected'); // TODO: Logging
+          console.log('Chat SignalR connected'); // TODO: Logging
           observer.next();
           observer.complete();
         })

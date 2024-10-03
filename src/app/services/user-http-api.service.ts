@@ -3,7 +3,6 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoginUser } from '../shared/models/LoginUser';
 import { HttpClient } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
 import { SignupUser } from '../shared/models/SignupUser';
 import { AuthUserService } from './auth-user.service';
 

@@ -1,0 +1,176 @@
+.gameContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.board {
+  width: 610px;
+  height: 480px;
+  position: relative;
+  background-color: #deb887;
+  box-sizing: border-box;
+  border: 10px solid #8b6914;
+  border-radius: 10px;
+  padding: 0px;
+}
+
+.left-bin {
+  position: relative;
+  left: 15px;
+  top: 0px;
+}
+
+.right-bin {
+  position: relative;
+  left: 330px;
+  top: -389px;
+}
+
+.arrow-down {
+  width: 0px; 
+  height: 0px; 
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 195px solid #755833;
+  border-bottom: 0px solid;
+  display: inline;
+  float: left;
+  position: relative;
+}
+
+.left-bin .bottom-row {
+  clear: left;
+}
+
+.right-bin .top-row {
+  clear: left;
+}
+
+.right-bin .bottom-row {
+  clear: left;
+}
+
+.bottom-row {
+  position: relative;
+  top: 70px
+}
+
+/*
+.bottom-row, .top-row {
+  margin: 0 auto;
+  width: 550px;
+  clear: both;
+}
+*/
+
+.arrow-up {
+  width: 0px; 
+  height: 0px; 
+  border-top: 0px solid;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent ;
+  border-bottom: 195px solid #755833;
+  display: inline;
+  float: left;
+  position: relative;
+}
+
+.arrow-up.odd {
+  border-bottom: 195px solid #044;}
+
+.arrow-down.even {
+  border-top: 195px solid #044;}
+
+.middle-bar {
+  width: 20px;
+  height: 450px;
+  padding: 5px;
+  background-color: #8b6914;
+  position: absolute;
+  left: 280px;
+  top: 0px;
+}
+
+::ng-deep .wPiece {
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
+  top: 0;
+  left: 1px;
+  z-index: 1;
+  border-radius: 18px;
+  display: block;
+}
+
+::ng-deep .bPiece {
+  width: 36px;
+  height: 36px;
+  background-color: #000000;
+  top: 0;
+  left: 1px;
+  z-index: 1;
+  border-radius: 18px;
+  display: block;
+}
+
+.bearing-off{
+    background-color: #513c08;
+    border: 10px solid #8b6914;
+    border-radius: 10px;
+    width: 100px;
+}
+
+.wBearing-off{
+    border-bottom: 5px solid #8b6914;
+    height: 50%;
+}
+
+.bBearing-off{
+    border-top: 5px solid #8b6914;
+    height: 50%;
+}
+
+.pawns{
+    width: fit-content;
+    position: absolute;
+    top: -192px;
+    z-index: 1;
+    left: -18px;
+}
+
+.dPawns1{
+    width: fit-content;
+    position: absolute;
+    top: 156px;
+    z-index: 1;
+    left: -18px;
+}
+
+.dPawns2{
+    width: fit-content;
+    position: absolute;
+    top: 120px;
+    z-index: 1;
+    left: -18px;
+}
+.dPawns3{
+    width: fit-content;
+    position: absolute;
+    top: 84px;
+    z-index: 1;
+    left: -18px;
+}
+.dPawns4{
+    width: fit-content;
+    position: absolute;
+    top: 48px;
+    z-index: 1;
+    left: -18px;
+}
+.dPawns5{
+    width: fit-content;
+    position: absolute;
+    top: 12px;
+    z-index: 1;
+    left: -18px;
+}

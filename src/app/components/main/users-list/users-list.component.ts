@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserHttpApiService } from '../../../services/user-http-api.service';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CommonModule } from '@angular/common';
-import { SignalRService } from '../../../services/signal-r.service';
+import { ChatSignalRService } from '../../../services/chat-signal-r.service';
 import { AuthUserService } from '../../../services/auth-user.service';
 
 @Component({
@@ -21,17 +21,20 @@ export class UsersListComponent implements OnInit {
 
   user: { id: string, username: string, email: string } | null = null;
 
-  prevUser:string = '';
+  selectedUser: string | null = null;
+
+  prevUser:string | null = '';
 
   @Output() usernameClicked = new EventEmitter<string>();
 
-  constructor(private authUser:AuthUserService,private userHttp: UserHttpApiService, private signalRService: SignalRService){}
+  constructor(private authUser:AuthUserService,private userHttp: UserHttpApiService, private signalRService: ChatSignalRService){}
 
   ngOnInit(): void {
     this.authUser.getUser().subscribe(user=>{
       this.user = user;
     });
     this.loadUsers();
+    sessionStorage.setItem('prevClickedUser', '');
   }
 
   loadUsers(){
@@ -65,9 +68,17 @@ export class UsersListComponent implements OnInit {
   }
 
   joinRoom(clickedUsername: string){
-    this.signalRService.leaveRoom(this.user!.username, this.prevUser);
-    this.prevUser = clickedUsername;
-    this.usernameClicked.emit(clickedUsername);
-    this.signalRService.joinRoom(this.user!.username,clickedUsername);
+    this.selectedUser = clickedUsername;
+    const prevUser = sessionStorage.getItem('prevClickedUser') || '';
+    if (prevUser) {
+        this.signalRService.leaveRoom(this.user!.username, prevUser);
+        sessionStorage.setItem('prevClickedUser', clickedUsername); 
+        this.usernameClicked.emit(clickedUsername);
+        this.signalRService.joinRoom(this.user!.username, clickedUsername);
+    } else {
+        sessionStorage.setItem('prevClickedUser', clickedUsername); 
+        this.usernameClicked.emit(clickedUsername);
+        this.signalRService.joinRoom(this.user!.username, clickedUsername);
+    }
   }
 }
