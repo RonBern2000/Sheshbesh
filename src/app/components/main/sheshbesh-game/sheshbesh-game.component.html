@@ -1,15 +1,14 @@
 <div class="room">Join Room1: <button class="joinBtn" (click)="joinRoom('Room1')">Join</button></div>
+<div class="room">Join Room2: <button class="joinBtn" (click)="joinRoom('Room2')">Join</button></div>
 
 <div class="gameContainer">
  <div class = "board">
+  <button [disabled]="!checkTurn()" (click)="rollDice()" class="diceBtn">Roll</button>
+  <p *ngIf="gameState" class="dices">{{gameState.diceRolls[0]}} : {{gameState.diceRolls[1]}} <span *ngIf="gameState.isDouble">: {{gameState.diceRolls[2]}} : {{gameState.diceRolls[3]}}</span></p>
   <div class="left-bin">
     <div class="top-row">
-      <div id="13" class="arrow-down odd">
-        <div></div>
-      </div>
-      <div id="14" class="arrow-down even">
-            <div></div>
-      </div>
+      <div id="13" class="arrow-down odd"><div></div></div>
+      <div id="14" class="arrow-down even"><div></div></div>
       <div id="15" class="arrow-down odd"><div></div></div>
       <div id="16" class="arrow-down even"><div></div></div>
       <div id="17" class="arrow-down odd"><div></div></div>
@@ -45,7 +44,7 @@
       <div id="3" class="arrow-up even"><div></div></div>
       <div id="2" class="arrow-up odd"><div></div></div>
       <div id="1" class="arrow-up even"><div></div></div>
-      </div>
+    </div>
   </div>
  </div>
  <div class="bearing-off">

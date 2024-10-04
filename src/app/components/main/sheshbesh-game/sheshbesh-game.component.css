@@ -14,6 +14,34 @@
   padding: 0px;
 }
 
+.diceBtn{
+  position: absolute;
+  left: 47%;
+  top: 47%;
+  z-index: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #231a0e;
+  color: white;
+  cursor: pointer;
+}
+
+.diceBtn:disabled{
+  background-color: grey;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.dices{
+  position: absolute;
+  left: 25%;
+  top: 42%;
+  z-index: 1;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
 .left-bin {
   position: relative;
   left: 15px;
