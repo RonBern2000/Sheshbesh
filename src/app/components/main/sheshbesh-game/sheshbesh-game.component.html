@@ -2,53 +2,58 @@
 <div class="room">Join Room2: <button class="joinBtn" (click)="joinRoom('Room2')">Join</button></div>
 
 <div class="gameContainer">
- <div class = "board">
+ <div *ngIf="gameState" class = "board">
   <button [disabled]="!checkTurn()" (click)="rollDice()" class="diceBtn">Roll</button>
   <p *ngIf="gameState" class="dices">{{gameState.diceRolls[0]}} : {{gameState.diceRolls[1]}} <span *ngIf="gameState.isDouble">: {{gameState.diceRolls[2]}} : {{gameState.diceRolls[3]}}</span></p>
   <div class="left-bin">
     <div class="top-row">
-      <div id="13" class="arrow-down odd"><div></div></div>
-      <div id="14" class="arrow-down even"><div></div></div>
-      <div id="15" class="arrow-down odd"><div></div></div>
-      <div id="16" class="arrow-down even"><div></div></div>
-      <div id="17" class="arrow-down odd"><div></div></div>
-      <div id="18"  class="arrow-down even"><div></div></div>
+      <div id="13" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[13]"><div *ngFor="let pawn of [].constructor(+gameState.board[13][1])" [ngClass]="givePawnClass(gameState.board[13])" (click)="selectPawn(13)"></div></ng-container></div></div>
+      <div id="14" class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[14]"><div *ngFor="let pawn of [].constructor(+gameState.board[14][1])" [ngClass]="givePawnClass(gameState.board[14])" (click)="selectPawn(14)"></div></ng-container></div></div>
+      <div id="15" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[15]"><div *ngFor="let pawn of [].constructor(+gameState.board[15][1])" [ngClass]="givePawnClass(gameState.board[15])" (click)="selectPawn(15)"></div></ng-container></div></div>
+      <div id="16" class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[16]"><div *ngFor="let pawn of [].constructor(+gameState.board[16][1])" [ngClass]="givePawnClass(gameState.board[16])" (click)="selectPawn(16)"></div></ng-container></div></div>
+      <div id="17" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[17]"><div *ngFor="let pawn of [].constructor(+gameState.board[17][1])" [ngClass]="givePawnClass(gameState.board[17])" (click)="selectPawn(17)"></div></ng-container></div></div>
+      <div id="18"  class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[18]"><div *ngFor="let pawn of [].constructor(+gameState.board[18][1])" [ngClass]="givePawnClass(gameState.board[18])" (click)="selectPawn(18)"></div></ng-container></div></div>
     </div>
 
     <div class="bottom-row"> 
-      <div id="12" class="arrow-up odd"><div></div></div>
-      <div id="11" class="arrow-up even"><div></div></div>
-      <div id="10" class="arrow-up odd"><div></div></div>
-      <div id="9" class="arrow-up even"><div></div></div>
-      <div id="8" class="arrow-up odd"><div></div></div>
-      <div id="7" class="arrow-up even"><div></div></div>
+      <div id="12" class="arrow-up odd"><ng-container *ngIf="gameState.board[12]"><div [ngClass]="getClassForPawnContainer(+gameState.board[12][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[12][1])" [ngClass]="givePawnClass(gameState.board[12])" (click)="selectPawn(12)"></div></div></ng-container></div>
+      <div id="11" class="arrow-up even"><ng-container *ngIf="gameState.board[11]"><div [ngClass]="getClassForPawnContainer(+gameState.board[11][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[11][1])" [ngClass]="givePawnClass(gameState.board[11])"(click)="selectPawn(11)"></div></div></ng-container></div>
+      <div id="10" class="arrow-up odd"><ng-container *ngIf="gameState.board[10]"><div [ngClass]="getClassForPawnContainer(+gameState.board[10][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[10][1])" [ngClass]="givePawnClass(gameState.board[10])" (click)="selectPawn(10)"></div></div></ng-container></div>
+      <div id="9" class="arrow-up even"><ng-container *ngIf="gameState.board[9]"><div [ngClass]="getClassForPawnContainer(+gameState.board[9][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[9][1])" [ngClass]="givePawnClass(gameState.board[9])" (click)="selectPawn(9)"></div></div></ng-container></div>
+      <div id="8" class="arrow-up odd"><ng-container *ngIf="gameState.board[8]"><div [ngClass]="getClassForPawnContainer(+gameState.board[8][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[8][1])" [ngClass]="givePawnClass(gameState.board[8])" (click)="selectPawn(8)"></div></div></ng-container></div>
+      <div id="7" class="arrow-up even"><ng-container *ngIf="gameState.board[7]"><div [ngClass]="getClassForPawnContainer(+gameState.board[7][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[7][1])" [ngClass]="givePawnClass(gameState.board[7])" (click)="selectPawn(7)"></div></div></ng-container></div>
     </div>
   </div> 
   
-  <div class = "middle-bar"></div>
-  
+  <div class = "middle-bar">
+    <div class="pawns">
+      <div *ngFor="let pawn of [].constructor(+gameState.jail[1])" [ngClass]="givePawnClass(gameState.jail[0])"></div>
+      <div *ngFor="let pawn of [].constructor(+gameState.jail[3])" [ngClass]="givePawnClass(gameState.jail[2])"></div>
+    </div>
+  </div>
   <div class = "right-bin">
     <div class="top-row">
-      <div id="19" class="arrow-down odd"><div></div></div>
-      <div id="20" class="arrow-down even"><div></div></div>
-      <div id="21" class="arrow-down odd"><div></div></div>
-      <div id="22" class="arrow-down even"><div></div></div>
-      <div id="23" class="arrow-down odd"><div></div></div>
-      <div id="24" class="arrow-down even"><div></div></div>
+      <div id="19" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[19]"><div *ngFor="let pawn of [].constructor(+gameState.board[19][1])" [ngClass]="givePawnClass(gameState.board[19])" (click)="selectPawn(19)"></div></ng-container></div></div>
+      <div id="20" class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[20]"><div *ngFor="let pawn of [].constructor(+gameState.board[20][1])" [ngClass]="givePawnClass(gameState.board[20])" (click)="selectPawn(20)"></div></ng-container></div></div>
+      <div id="21" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[21]"><div *ngFor="let pawn of [].constructor(+gameState.board[21][1])" [ngClass]="givePawnClass(gameState.board[21])" (click)="selectPawn(21)"></div></ng-container></div></div>
+      <div id="22" class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[22]"><div *ngFor="let pawn of [].constructor(+gameState.board[22][1])" [ngClass]="givePawnClass(gameState.board[22])" (click)="selectPawn(22)"></div></ng-container></div></div>
+      <div id="23" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[23]"><div *ngFor="let pawn of [].constructor(+gameState.board[23][1])" [ngClass]="givePawnClass(gameState.board[23])" (click)="selectPawn(23)"></div></ng-container></div></div>
+      <div id="24" class="arrow-down even"><div class="pawns"><ng-container *ngIf="gameState.board[24]"><div *ngFor="let pawn of [].constructor(+gameState.board[24][1])" [ngClass]="givePawnClass(gameState.board[24])" (click)="selectPawn(24)"></div></ng-container></div></div> 
     </div>
 
     <div class="bottom-row"> 
-      <div id="6" class="arrow-up odd"><div></div></div>
-      <div id="5" class="arrow-up even"><div></div></div>
-      <div id="4" class="arrow-up odd"><div></div></div>
-      <div id="3" class="arrow-up even"><div></div></div>
-      <div id="2" class="arrow-up odd"><div></div></div>
-      <div id="1" class="arrow-up even"><div></div></div>
+      <div id="6" class="arrow-up odd"><ng-container *ngIf="gameState.board[6]"><div [ngClass]="getClassForPawnContainer(+gameState.board[6][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[6][1])" [ngClass]="givePawnClass(gameState.board[6])" (click)="selectPawn(6)"></div></div></ng-container></div>      
+      <div id="5" class="arrow-up even"><ng-container *ngIf="gameState.board[5]"><div [ngClass]="getClassForPawnContainer(+gameState.board[5][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[5][1])" [ngClass]="givePawnClass(gameState.board[5])" (click)="selectPawn(5)"></div></div></ng-container></div>
+      <div id="4" class="arrow-up odd"><ng-container *ngIf="gameState.board[4]"><div [ngClass]="getClassForPawnContainer(+gameState.board[4][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[4][1])" [ngClass]="givePawnClass(gameState.board[4])" (click)="selectPawn(4)"></div></div></ng-container></div>
+      <div id="3" class="arrow-up even"><ng-container *ngIf="gameState.board[3]"><div [ngClass]="getClassForPawnContainer(+gameState.board[3][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[3][1])" [ngClass]="givePawnClass(gameState.board[3])" (click)="selectPawn(3)"></div></div></ng-container></div>
+      <div id="2" class="arrow-up odd"><ng-container *ngIf="gameState.board[2]"><div [ngClass]="getClassForPawnContainer(+gameState.board[2][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[2][1])" [ngClass]="givePawnClass(gameState.board[2])" (click)="selectPawn(2)"></div></div></ng-container></div>
+      <div id="1" class="arrow-up even"><ng-container *ngIf="gameState.board[1]"><div [ngClass]="getClassForPawnContainer(+gameState.board[1][1])"><div *ngFor="let pawn of [].constructor(+gameState.board[1][1])" [ngClass]="givePawnClass(gameState.board[1])" (click)="selectPawn(1)"></div></div></ng-container></div>
     </div>
   </div>
+</div>
+ <div *ngIf="gameState" class="bearing-off">
+    <div id="25" class="wBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[25][1])" [ngClass]="givePawnClass(gameState.board[25])" (click)="selectPawn(25)"></div></div>
+    <div id="0" class="bBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[0][1])" [ngClass]="givePawnClass(gameState.board[0])" (click)="selectPawn(0)"></div></div>
  </div>
- <div class="bearing-off">
-    <div class="wBearing-off"></div>
-    <div class="bBearing-off"></div>
- </div>
+ 
 </div>

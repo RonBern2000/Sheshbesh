@@ -2,8 +2,7 @@ import { Component, OnDestroy} from '@angular/core';
 import { GameSignalRService } from '../../../services/game-signal-r.service';
 import { Sheshbesh } from '../../../shared/models/Sheshbesh';
 import { CommonModule } from '@angular/common';
-import { BoardService } from '../../../services/board.service';
-
+import { switchMap } from 'rxjs';
 @Component({
   selector: 'sheshbesh-game',
   standalone: true,
@@ -16,7 +15,15 @@ export class SheshbeshGameComponent implements OnDestroy{
   gameState!: Sheshbesh | null;
   connectionId: string = '';
 
-  constructor(private boardService: BoardService,private gameSignalRService: GameSignalRService){}
+  constructor(private gameSignalRService: GameSignalRService){}
+
+  getClassForPawnContainer(num: number):string{
+    return `dPawns${num}`;
+  }
+
+  givePawnClass(pawn:string):string{
+    return `${pawn[0]}Piece`;
+  }
 
   joinRoom(groupName: string){
     this.gameSignalRService.startConnection().subscribe(()=>{
@@ -36,7 +43,6 @@ export class SheshbeshGameComponent implements OnDestroy{
   }
 
   startGame() {
-    this.boardService.fillAndUpdateBoard(this.gameState!.board, this.gameState!.jail);
     this.checkTurn();
   }
 
@@ -73,20 +79,51 @@ export class SheshbeshGameComponent implements OnDestroy{
   }
 
   private highlightAvailablePawns(playerColor: 'black' | 'white') {
-    // Logic to highlight pawns based on rolled dice
-    // You might want to maintain a state to track highlighted pawns
-  }
-
-  selectPawn(){
+    const pawns = playerColor === 'black' ? 'bPiece' : 'wPiece';
 
   }
 
-  private highlight(){
+  selectPawn(fromIndex: number){
+    // black player turn, need to fix so he could pick only his pawns
+    document.querySelectorAll('.highlighted').forEach((element) => {
+    element.classList.remove('highlighted');
+  });
 
+  // For the black player
+  if (this.connectionId === this.gameState?.playerBlackId && this.gameState.isPlayerBlackTurn) {
+    this.gameSignalRService.selectPawn(fromIndex).pipe(
+      switchMap(() => this.gameSignalRService.receiveGameState())).subscribe((gameState: Sheshbesh | null) => {
+      this.gameState = gameState;
+      document.querySelectorAll('.highlighted').forEach((element) => {
+        element.classList.remove('highlighted');
+      });
+      this.gameState!.possibleMoves.forEach((move) => {
+        if (move !== 0) {
+          document.getElementById(`${move}`)?.classList.add('highlighted');
+        }
+      });
+    });
+  }
+
+  // For the white player
+  if (this.connectionId === this.gameState?.playerWhiteId && !this.gameState.isPlayerBlackTurn) {
+    this.gameSignalRService.selectPawn(fromIndex).pipe(
+      switchMap(() => this.gameSignalRService.receiveGameState())).subscribe((gameState: Sheshbesh | null) => {
+      this.gameState = gameState;
+      document.querySelectorAll('.highlighted').forEach((element) => {
+        element.classList.remove('highlighted');
+      });
+      this.gameState!.possibleMoves.forEach((move) => {
+        if (move !== 0) {
+          document.getElementById(`${move}`)?.classList.add('highlighted');
+        }
+      });
+    });
+  }
   }
 
   makeMove(){
-
+    // after this we should update both playes gameState
   }
 
   ngOnDestroy(): void {

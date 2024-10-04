@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalR';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject ,from} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Sheshbesh } from '../shared/models/Sheshbesh';
 
@@ -38,8 +38,12 @@ export class GameSignalRService {
       this.gameStateSubject.next(gameState);
     });
 
-    this.hubConnection.on('DiceRolled',(gamstate:Sheshbesh)=>{
-      this.gameStateSubject.next(gamstate);
+    this.hubConnection.on('DiceRolled',(gamestate:Sheshbesh)=>{
+      this.gameStateSubject.next(gamestate);
+    });
+
+    this.hubConnection.on('ReceivePossbleMoves', (fromPossion:number, gameState: Sheshbesh)=>{
+      this.gameStateSubject.next(gameState);
     });
 
     this.hubConnection.onclose(() => {
@@ -119,8 +123,15 @@ export class GameSignalRService {
     }
   }
 
-  selectPawn(){
-
+  selectPawn(fromIndex: number): Observable<any>{
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      return from(this.hubConnection.invoke('GetPossibleMoves', fromIndex));
+  } else {
+      console.error('Hub connection is not in Connected state.');
+      return new Observable(observer => {
+      observer.error('Hub connection is not in Connected state.');
+    });
+  }
   }
 
   makeMove(){
