@@ -1,6 +1,64 @@
+.mainContainer{
+  display: flex;
+  justify-content: center;
+}
+
+.room{
+  padding: 10px;
+  font-size: 1.5rem;
+  width: 245px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.joinBtn{
+  padding: 10px;
+  width: 70px;
+  border-radius: 5px;
+  border: solid #2476f1;
+  background: #2476f1;
+  color: white;
+}
+
+.leaveBtn{
+  padding: 10px;
+  width: 100px;
+  border-radius: 5px;
+  border: solid #2476f1;
+  background: #2476f1;
+  color: white;
+}
+
+.custom-toast-class {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .gameContainer{
     display: flex;
     justify-content: center;
+}
+
+::ng-deep .whiteRotate{
+  transform: rotate(180deg);
+}
+
+.msg{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center
+}
+
+.jail{
+  width: 120px;
+  background-color: #231a0e;
+  text-align: center; 
+  font-size: 2rem;
+  color: #b38d5b66;
+  border: 10px solid #8b6914;
+  border-radius: 10px;
 }
 
 .board {
@@ -83,14 +141,6 @@
   top: 70px
 }
 
-/*
-.bottom-row, .top-row {
-  margin: 0 auto;
-  width: 550px;
-  clear: both;
-}
-*/
-
 .arrow-up {
   width: 0px; 
   height: 0px; 
@@ -156,11 +206,15 @@
 .wBearing-off{
     border-bottom: 5px solid #8b6914;
     height: 50%;
+    position: relative;
+    z-index: 2;
+    overflow-y: auto;
 }
 
 .bBearing-off{
     border-top: 5px solid #8b6914;
     height: 50%;
+    overflow-y: auto;
 }
 
 .pawns{
@@ -206,4 +260,9 @@
     top: 12px;
     z-index: 1;
     left: -18px;
+}
+
+.leaveBtn{
+  z-index: 2;
+  position: relative;
 }

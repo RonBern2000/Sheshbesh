@@ -13,9 +13,13 @@ export class GameSignalRService {
   private apiUrl:string = `${environment.apiBaseUrl}/sheshbeshHub`;
   private hubConnection!: signalR.HubConnection;
 
-  private gameStateSubject = new BehaviorSubject<Sheshbesh | null>(null); // Adjust type based on your game's state
-  private playerMoveSubject = new Subject<{ player: string, move: string }>();
+  private gameStateSubject = new Subject<Sheshbesh | null>();
   private playerId = new Subject<string>();
+  private messageToPlayers = new Subject<string>();
+  private gameStarted = new Subject<boolean>();
+  private firstPlayerJoined = new Subject<{ hasJoined: boolean, roomName: string }>();
+  private leaverId = new Subject<string>();
+  private otherId = new Subject<string>();
 
   constructor() {
     this.createConnection();
@@ -35,15 +39,39 @@ export class GameSignalRService {
     });
 
     this.hubConnection.on('StartGame', (gameState:Sheshbesh) => {
-      this.gameStateSubject.next(gameState);
+      this.gameStateSubject.next({...gameState});
     });
 
-    this.hubConnection.on('DiceRolled',(gamestate:Sheshbesh)=>{
-      this.gameStateSubject.next(gamestate);
+    this.hubConnection.on('DiceRolled',(gameState:Sheshbesh)=>{
+      this.gameStateSubject.next({...gameState});
     });
 
-    this.hubConnection.on('ReceivePossbleMoves', (fromPossion:number, gameState: Sheshbesh)=>{
-      this.gameStateSubject.next(gameState);
+    this.hubConnection.on('ReceivePossbleMoves', (gameState: Sheshbesh)=>{
+      this.gameStateSubject.next({...gameState});
+    });
+
+    this.hubConnection.on('MoveMade', (gameState:Sheshbesh)=>{
+      this.gameStateSubject.next({...gameState});
+    });
+
+    this.hubConnection.on('TurnSkipped',(message)=>{
+      this.messageToPlayers.next(message);
+    });
+
+    this.hubConnection.on('GameHasStartedMsg', (isStarted)=>{
+      this.gameStarted.next(isStarted);
+    });
+
+    this.hubConnection.on('FirstPlayerJoined',(firstPlayerJoined)=>{
+      this.firstPlayerJoined.next({...firstPlayerJoined});
+    });
+
+    this.hubConnection.on('RedirectTheLeaver',(id)=>{
+      this.leaverId.next(id);
+    });
+
+    this.hubConnection.on('RedirectTheOther',(id)=>{
+      this.otherId.next(id);
     });
 
     this.hubConnection.onclose(() => {
@@ -95,6 +123,34 @@ export class GameSignalRService {
     });
   }
 
+  receiveGameState(): Observable<Sheshbesh | null> {
+    return this.gameStateSubject.asObservable();
+  }
+
+  receivePlayerId():Observable<string> {
+    return this.playerId.asObservable();
+  }
+
+  receiveMessageToPlayers():Observable<string>{
+    return this.messageToPlayers.asObservable();
+  }
+
+  receiveIsGameStarted():Observable<boolean>{
+    return this.gameStarted.asObservable();
+  }
+
+  receiveFirstPlayerJoined(): Observable<{ hasJoined: boolean, roomName: string }> {
+    return this.firstPlayerJoined.asObservable();
+  }
+
+  receiveLeaverId(): Observable<string> {
+    return this.leaverId.asObservable();
+  }
+
+  receiveOtherId(): Observable<string> {
+    return this.otherId.asObservable();
+  }
+
   joinRoom(groupName: string):void{
     if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
       this.hubConnection.invoke('JoinGame', groupName)
@@ -105,12 +161,15 @@ export class GameSignalRService {
     }
   }
 
-  receiveGameState(): Observable<Sheshbesh | null> {
-    return this.gameStateSubject.asObservable();
-  }
-
-  receivePlayerId():Observable<string> {
-    return this.playerId.asObservable();
+  leaveRoom(){
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+        return from(this.hubConnection.invoke('LeaveRoom'));
+    } else {
+      console.error('Hub connection is not in Connected state.');
+      return new Observable(observer => {
+      observer.error('Hub connection is not in Connected state.');
+      });
+    }
   }
 
   rollDice(){
@@ -125,17 +184,24 @@ export class GameSignalRService {
 
   selectPawn(fromIndex: number): Observable<any>{
     if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
-      return from(this.hubConnection.invoke('GetPossibleMoves', fromIndex));
-  } else {
+        return from(this.hubConnection.invoke('GetPossibleMoves', fromIndex));
+    } else {
       console.error('Hub connection is not in Connected state.');
       return new Observable(observer => {
       observer.error('Hub connection is not in Connected state.');
-    });
-  }
+      });
+    }
   }
 
-  makeMove(){
-
+  makeMove(fromIndex:number, toIndex:number){
+    if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
+        return from(this.hubConnection.invoke('MakeMove', fromIndex, toIndex));
+    } else {
+      console.error('Hub connection is not in Connected state.');
+      return new Observable(observer => {
+      observer.error('Hub connection is not in Connected state.');
+      });
+    }
   }
 
   disconnect(): void {
@@ -147,18 +213,4 @@ export class GameSignalRService {
       console.log('SignalR connection is not connected.');
     }
   }
-
-  // receiveMove(): Observable<{ player: string, move: string }> {
-  //   return this.playerMoveSubject.asObservable();
-  // }
-
-  // sendMove(player: string, move: string): void {
-  //   if (this.hubConnection.state === signalR.HubConnectionState.Connected) {
-  //     this.hubConnection.invoke('SendMove', player, move)
-  //       .then(() => console.log('Move sent'))
-  //       .catch(err => console.error('Error sending move:', err));
-  //   } else {
-  //     console.error('Cannot send move, SignalR is not connected.');
-  //   }
-  // }
 }

@@ -1,7 +1,18 @@
-<div class="room">Join Room1: <button class="joinBtn" (click)="joinRoom('Room1')">Join</button></div>
-<div class="room">Join Room2: <button class="joinBtn" (click)="joinRoom('Room2')">Join</button></div>
-
-<div class="gameContainer">
+<div class="mainContainer">
+  <div class="roomsBtn" *ngIf="!gameState">
+  <ng-container *ngFor="let room of [].constructor(10); let i = index">
+    <div class="room">Join Room{{i+1}}: 
+      <button class="joinBtn" (click)="joinRoom('Room' + (i + 1))">Join</button>
+    </div>
+  </ng-container>
+  </div>
+<div>
+<p *ngIf="gameState" class="msg">{{message}}</p>
+<div class="gameContainer" *mcRerender="gameState">
+  <div class="jail" *ngIf="gameState">Jail
+    <div *ngFor="let pawn of [].constructor(+gameState!.jail[1])" [ngClass]="givePawnClass(gameState.jail[0])" (click)="selectPawn(26)"></div>
+    <div *ngFor="let pawn of [].constructor(+gameState!.jail[3])" [ngClass]="givePawnClass(gameState.jail[2])" (click)="selectPawn(26)"></div>
+  </div>
  <div *ngIf="gameState" class = "board">
   <button [disabled]="!checkTurn()" (click)="rollDice()" class="diceBtn">Roll</button>
   <p *ngIf="gameState" class="dices">{{gameState.diceRolls[0]}} : {{gameState.diceRolls[1]}} <span *ngIf="gameState.isDouble">: {{gameState.diceRolls[2]}} : {{gameState.diceRolls[3]}}</span></p>
@@ -25,12 +36,8 @@
     </div>
   </div> 
   
-  <div class = "middle-bar">
-    <div class="pawns">
-      <div *ngFor="let pawn of [].constructor(+gameState.jail[1])" [ngClass]="givePawnClass(gameState.jail[0])"></div>
-      <div *ngFor="let pawn of [].constructor(+gameState.jail[3])" [ngClass]="givePawnClass(gameState.jail[2])"></div>
-    </div>
-  </div>
+  <div class = "middle-bar"></div>
+
   <div class = "right-bin">
     <div class="top-row">
       <div id="19" class="arrow-down odd"><div class="pawns"><ng-container *ngIf="gameState.board[19]"><div *ngFor="let pawn of [].constructor(+gameState.board[19][1])" [ngClass]="givePawnClass(gameState.board[19])" (click)="selectPawn(19)"></div></ng-container></div></div>
@@ -52,8 +59,12 @@
   </div>
 </div>
  <div *ngIf="gameState" class="bearing-off">
-    <div id="25" class="wBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[25][1])" [ngClass]="givePawnClass(gameState.board[25])" (click)="selectPawn(25)"></div></div>
-    <div id="0" class="bBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[0][1])" [ngClass]="givePawnClass(gameState.board[0])" (click)="selectPawn(0)"></div></div>
+    <div id="25" class="wBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[25][1])" [ngClass]="givePawnClass(gameState.board[25])"></div></div>
+    <div id="0" class="bBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[0][1])" [ngClass]="givePawnClass(gameState.board[0])"></div></div>
  </div>
- 
+</div>
+<div *ngIf="gameState">
+  <button class="leaveBtn" (click)="LeaveRoom()">Leave Room/Game</button>
+</div>
+</div>
 </div>

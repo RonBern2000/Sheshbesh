@@ -7,4 +7,7 @@ export interface Sheshbesh {
     possibleMoves: number[];
     diceRolls: number[];
     isDouble: boolean;
+    hasRolledDice: boolean;
+    blackJailFilled: boolean;
+    whiteJailFilled: boolean;
 }
