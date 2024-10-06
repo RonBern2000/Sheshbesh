@@ -16,16 +16,27 @@ import { Router } from '@angular/router';
 export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewChecked{
 
   private subscriptions: Subscription[] = [];
-
+  
+  amountOfPlayers:number = 0;
   gameState!: Sheshbesh | null;
   connectionId: string = '';
   hasRolledDice: boolean = false;
   message: string = 'Black player turn';
   hasPressedLeaveRoom: boolean = false;
 
+  roomNames = ['Room1', 'Room2', 'Room3', 'Room5', 'Room6', 'Room7', 'Room8', 'Room9', 'Room10'];
+  playerCounts: { [key: string]: number } = {};
+
   constructor(private toastr: ToastrService, private gameSignalRService: GameSignalRService, private cdr: ChangeDetectorRef, private router: Router){}
 
   ngOnInit(): void {
+    this.gameSignalRService.startConnection().subscribe(() => {
+      this.setupSubscriptions();
+    });
+  }
+
+  private setupSubscriptions():void{
+
     this.subscriptions.push(this.gameSignalRService.receiveGameState().subscribe((gameState: Sheshbesh | null) => {
       if (gameState) {
         this.gameState = gameState;
@@ -83,8 +94,20 @@ export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewCheck
           });
           this.hasPressedLeaveRoom = false;
         }
-      })
-    );
+      }));
+      
+    this.subscriptions.push( 
+      this.gameSignalRService.receivePlayerId().subscribe((id) => {
+      this.connectionId = id;
+      this.cdr.detectChanges();
+    }));
+
+    this.subscriptions.push(
+    this.gameSignalRService.playerCount.subscribe(counts => {
+      this.playerCounts = counts;
+      this.cdr.detectChanges();
+    })
+  );
   }
 
   ngAfterViewChecked() {
@@ -106,13 +129,7 @@ export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewCheck
   }
 
   joinRoom(groupName: string){
-    this.gameSignalRService.startConnection().subscribe(() => {
-      this.gameSignalRService.joinRoom(groupName);
-      this.gameSignalRService.receivePlayerId().subscribe((id) => {
-        this.connectionId = id;
-        this.cdr.detectChanges();
-      });
-    });
+    this.gameSignalRService.joinRoom(groupName);
   }
 
   LeaveRoom(){

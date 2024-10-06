@@ -1,11 +1,15 @@
 <div class="mainContainer">
+
   <div class="roomsBtn" *ngIf="!gameState">
-  <ng-container *ngFor="let room of [].constructor(10); let i = index">
-    <div class="room">Join Room{{i+1}}: 
-      <button class="joinBtn" (click)="joinRoom('Room' + (i + 1))">Join</button>
-    </div>
-  </ng-container>
+    <ng-container *ngFor="let room of [].constructor(10); let i = index">
+      <div class="room">
+        Join Room {{ i + 1 }}:
+        <button class="joinBtn" (click)="joinRoom('Room' + (i + 1))">Join</button>
+        {{ playerCounts['Room' + (i + 1)] || 0 }}/2
+      </div>
+    </ng-container>
   </div>
+
 <div>
 <p *ngIf="gameState" class="msg">{{message}}</p>
 <div class="gameContainer" *mcRerender="gameState">

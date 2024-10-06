@@ -21,6 +21,8 @@ export class GameSignalRService {
   private leaverId = new Subject<string>();
   private otherId = new Subject<string>();
 
+  public playerCount = new BehaviorSubject<{ [key: string]: number }>({});
+
   constructor() {
     this.createConnection();
   }
@@ -34,6 +36,11 @@ export class GameSignalRService {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
+    this.hubConnection.on('UpdatePlayerCount', (roomName: string, count: number) => {
+      const currentCounts = this.playerCount.getValue();
+      this.playerCount.next({ ...currentCounts, [roomName]: count });
+    });
+    
     this.hubConnection.on('PlayerJoined', (id:string) => {
       this.playerId.next(id);
     });

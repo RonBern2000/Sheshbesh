@@ -49,7 +49,6 @@ export class ChatSignalRService {
       this.hubConnection.onreconnecting(() => {
         console.log('SignalR connection is reconnecting.'); // TODO: Logging
       });
-   
     }
 
    startConnection(): Observable<void>{
