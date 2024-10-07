@@ -8,6 +8,7 @@ import { ChatMessage } from '../../../shared/models/ChatMessage';
 import { MessageService } from '../../../services/message.service';
 import { DmMessage } from '../../../shared/models/DmMessage';
 import { Router } from '@angular/router';
+import { UserHttpApiService } from '../../../services/user-http-api.service';
 @Component({
   selector: 'chat-hub-component',
   standalone: true,
@@ -30,9 +31,23 @@ export class ChatHubComponent implements OnInit, OnDestroy, AfterViewChecked {
   
   clickedUsername:string = '';
 
-  constructor(private router: Router, private messageService:MessageService, private authUser:AuthUserService,private signalRService: ChatSignalRService){}
+  constructor(private userHttpService: UserHttpApiService,private router: Router, private messageService:MessageService, private authUser:AuthUserService,private signalRService: ChatSignalRService){}
 
   ngOnInit(): void {
+    if(!sessionStorage.getItem('authUser')){
+      this.userHttpService.isAuth().subscribe({
+      next: (res) => {
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
+      },
+      error: (error) => {
+        console.error('User is not authenticated', error);
+      }
+    });
+    }
     this.authUser.getUser().subscribe(user=>{
       this.user = user;
     });

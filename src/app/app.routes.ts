@@ -8,6 +8,6 @@ import { SheshbeshGameComponent } from './components/main/sheshbesh-game/sheshbe
 export const routes: Routes = [
     { path: '', component:LoginComponentComponent, title: 'Login Page'},
     { path: 'signup', component: SignupComponent, title: 'Signup Page'},
-    { path: 'chatHub', component: ChatHubComponent, title: 'Chat Hub', canActivate: [authGuard]},
-    { path: 'sheshbeshHub', component: SheshbeshGameComponent, title: 'Sheshbesh Game', canActivate: [authGuard]}
+    { path: 'chatHub', component: ChatHubComponent, title: 'Chat Hub'},
+    { path: 'sheshbeshHub', component: SheshbeshGameComponent, title: 'Sheshbesh Game'}
 ];

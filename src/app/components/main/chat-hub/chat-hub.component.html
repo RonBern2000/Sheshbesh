@@ -1,5 +1,7 @@
 <div class="container">
     <button class="playButton" (click)="navigateToGame()">Play</button>
+    <div class="chatsContainer">
+    <div class="globalChat">
     <h2 class="gcTitle">Global chat:</h2>
     <div class="chatContainer">
         <div #messageList class="messageList">
@@ -12,6 +14,7 @@
             <input [(ngModel)]="newMessage" placeholder="Type a message..." />
             <button (click)="sendMessage(newMessage)">Chat</button>
         </div>
+    </div>
     </div>
     <div class="dmContainer">
         <div class="usersContainer">
@@ -30,5 +33,6 @@
                 <button (click)="sendDmMessage(newDmMessage)">Chat</button>
             </div>
         </div>
+    </div>
     </div>
 </div>

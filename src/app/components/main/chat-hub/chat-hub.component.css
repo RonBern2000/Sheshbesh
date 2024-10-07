@@ -7,6 +7,12 @@
     margin-right: auto;
 }
 
+.chatsContainer{
+    display: flex;
+    gap: 50px;
+    margin-top: 20px;
+}
+
 .playButton{
   background-color: #2476f1;
   border-radius: 25px;
@@ -27,6 +33,14 @@
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
+  
+}
+
+.globalChat{
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.9);
+  background-color: #d7dde225;
+  padding: 30px;
+  border-radius: 10px;
 }
 
 .messageList {
@@ -104,6 +118,10 @@
 .dmContainer{
   display: flex;
   gap: 5px;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.9);
+  background-color: #d7dde225;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .dmChat{

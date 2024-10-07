@@ -12,6 +12,7 @@ import { LoginUser } from '../../../shared/models/LoginUser';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthUserService } from '../../../services/auth-user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'login-component',
@@ -28,9 +29,29 @@ export class LoginComponentComponent implements OnInit{
 
   loginFail: boolean = false;
 
-  constructor(private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer: Renderer2, private fb: FormBuilder, private router: Router){}
+  constructor(private toastr: ToastrService,private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer: Renderer2, private fb: FormBuilder, private router: Router){}
 
   ngOnInit(): void {
+    sessionStorage.clear();
+    this.authUser.clearUser();
+    this.userHttpService.isAuth().subscribe({
+      next: (res) => {
+        this.router.navigate(['/chatHub']);
+        this.toastr.success('Enjoy chatting!', 'We remember you', {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
+      },
+      error: (error) => {
+        console.error('User is not authenticated', error);
+      }
+    });
+
     this.loginForm = this.fb.group({
       username: new FormControl<string>('', [
         Validators.required,
@@ -63,7 +84,6 @@ export class LoginComponentComponent implements OnInit{
         this.resetFrom();
       },
       error: () => {
-        // TODO: do logging
         this.loginFail = !this.loginFail;
         this.resetFrom();
       }

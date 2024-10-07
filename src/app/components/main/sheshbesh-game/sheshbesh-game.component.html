@@ -1,14 +1,14 @@
 <div class="mainContainer">
 
   <div class="roomsBtn" *ngIf="!gameState">
-    <ng-container *ngFor="let room of [].constructor(10); let i = index">
-      <div class="room">
-        Join Room {{ i + 1 }}:
-        <button class="joinBtn" (click)="joinRoom('Room' + (i + 1))">Join</button>
-        {{ playerCounts['Room' + (i + 1)] || 0 }}/2
-      </div>
-    </ng-container>
-  </div>
+  <ng-container *ngFor="let room of [].constructor(10); let i = index">
+    <div class="room">
+      Join Room {{ i + 1 }}: 
+      <button class="joinBtn" (click)="joinRoom('Room' + (i + 1))">Join</button> 
+      {{ playerCounts['Room' + (i + 1)] || 0 }}/2
+    </div>
+  </ng-container>
+</div>
 
 <div>
 <p *ngIf="gameState" class="msg">{{message}}</p>
@@ -63,8 +63,8 @@
   </div>
 </div>
  <div *ngIf="gameState" class="bearing-off">
-    <div id="25" class="wBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[25][1])" [ngClass]="givePawnClass(gameState.board[25])"></div></div>
-    <div id="0" class="bBearing-off"><div *ngFor="let pawn of [].constructor(+gameState.board[0][1])" [ngClass]="givePawnClass(gameState.board[0])"></div></div>
+    <div id="25" class="wBearing-off"><div *ngFor="let pawn of [].constructor(+(gameState.board[25].substring(1)))" [ngClass]="givePawnClass(gameState.board[25])"></div></div>
+    <div id="0" class="bBearing-off"><div *ngFor="let pawn of [].constructor(+(gameState.board[0].substring(1)))" [ngClass]="givePawnClass(gameState.board[0])"></div></div>
  </div>
 </div>
 <div *ngIf="gameState">

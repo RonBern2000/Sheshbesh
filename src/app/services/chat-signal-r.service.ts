@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalR'
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class ChatSignalRService {
 
   private messageSubject = new Subject<{username: string, message: string }>();
 
-  constructor() {
+  constructor(private router: Router, private toastr: ToastrService) {
     this.createConnection();
    }
 
@@ -36,6 +38,14 @@ export class ChatSignalRService {
 
        this.hubConnection.on('Userleft', (username: string) => {
         console.log(`${username} has left the group.`);
+    });
+
+    this.hubConnection.on('Unauthorized', (message: string) => {
+      this.router.navigate(['']);
+      this.toastr.error("Please log in first...", message, {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
     });
 
       this.hubConnection.onclose(() => {

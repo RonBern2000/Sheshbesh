@@ -4,13 +4,42 @@
   border: 1px solid #ccc;
   padding: 1rem;
   margin-top: 20px;
-  width: 100px;
+  width: 135px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dataContainer::-webkit-scrollbar {
+    width: 10px;
+}
+
+.dataContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 25px;
+}
+
+.dataContainer::-webkit-scrollbar-thumb {
+    background: #71afde;
+    border-radius: 25px;
+}
+
+.dataContainer::-webkit-scrollbar-thumb:hover {
+    background: #2d6691;
+}
+
+.dataContainer::-webkit-scrollbar-button {
+    display: none;
 }
 
 .dataItem {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid ;
   cursor: pointer;
+  background-color: #2d6691b4;
+  width: 100px;
+  border-radius: 10px;
 }
 
 .loading {

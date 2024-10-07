@@ -6,6 +6,8 @@ import { Subscription, take } from 'rxjs';
 import { NgxRerenderModule } from 'ngx-rerender';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { UserHttpApiService } from '../../../services/user-http-api.service';
+import { AuthUserService } from '../../../services/auth-user.service';
 @Component({
   selector: 'sheshbesh-game',
   standalone: true,
@@ -24,15 +26,29 @@ export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewCheck
   message: string = 'Black player turn';
   hasPressedLeaveRoom: boolean = false;
 
-  roomNames = ['Room1', 'Room2', 'Room3', 'Room5', 'Room6', 'Room7', 'Room8', 'Room9', 'Room10'];
   playerCounts: { [key: string]: number } = {};
 
-  constructor(private toastr: ToastrService, private gameSignalRService: GameSignalRService, private cdr: ChangeDetectorRef, private router: Router){}
+  constructor(private userHttpService: UserHttpApiService, private authUser: AuthUserService,private toastr: ToastrService, private gameSignalRService: GameSignalRService, private cdr: ChangeDetectorRef, private router: Router){}
 
   ngOnInit(): void {
     this.gameSignalRService.startConnection().subscribe(() => {
       this.setupSubscriptions();
+      this.requestPlayerCounts();
     });
+    if(!sessionStorage.getItem('authUser')){
+      this.userHttpService.isAuth().subscribe({
+      next: (res) => {
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
+      },
+      error: (error) => {
+        console.error('User is not authenticated', error);
+      }
+    });
+    }
   }
 
   private setupSubscriptions():void{
@@ -103,11 +119,15 @@ export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewCheck
     }));
 
     this.subscriptions.push(
-    this.gameSignalRService.playerCount.subscribe(counts => {
-      this.playerCounts = counts;
-      this.cdr.detectChanges();
-    })
-  );
+      this.gameSignalRService.getPlayerCount().subscribe(counts => {
+        this.playerCounts = counts;
+        this.cdr.detectChanges();
+      })
+    );
+  }
+
+  private requestPlayerCounts(): void {
+    this.gameSignalRService.requestCurrentPlayerCounts();
   }
 
   ngAfterViewChecked() {

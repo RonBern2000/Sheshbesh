@@ -9,10 +9,10 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    width: 80%;
+    width: 30%;
     padding: 15px;
-    background-color: #486581;
-    box-shadow: 0px 2px 2px 2px black;
+    background-color: #757b813b;
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.9);
     border-radius: 15px;
 }
 

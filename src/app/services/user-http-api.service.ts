@@ -22,7 +22,7 @@ export class UserHttpApiService {
   login(loginUser:LoginUser):Observable<any>{
     return this.http.post<void>(`${this.apiUrl}/login`,loginUser,{ withCredentials: true})
       .pipe(catchError((error) => {
-        return throwError(()=> new Error(`User Not found, ${error.message}`)) //TODO: logging
+        return throwError(()=> new Error(`User Not found, ${error.message}`))
       }));
   }
 
@@ -33,7 +33,7 @@ export class UserHttpApiService {
         this.authUser.clearUser();
       }),
       catchError((error) => {
-        return throwError(() => new Error(`Logout failed, ${error.message}`)); // TODO: catch the error here + logging
+        return throwError(() => new Error(`Logout failed, ${error.message}`));
       })
     ); 
   }
@@ -41,14 +41,14 @@ export class UserHttpApiService {
   createUser(newUser: SignupUser):Observable<any>{
     return this.http.post<void>(`${this.apiUrl}/signup`,newUser,{ withCredentials: true})
     .pipe(catchError((error) => {
-        return throwError(()=> new Error(`User Not created, ${error.message}`)) //TODO: logging
+        return throwError(()=> new Error(`User Not created, ${error.message}`)) 
       }));
   }
 
   isAuth():Observable<any>{
-    return this.http.post<boolean>(`${this.apiUrl}/authStatus`,{},{ withCredentials: true})
+    return this.http.post<any>(`${this.apiUrl}/authStatus`,{},{ withCredentials: true})
       .pipe(catchError((error)=>{
-        return throwError(()=> new Error(`User Not created, ${error.message}`)) //TODO: logging
+        return throwError(()=> new Error(`User Not created, ${error.message}`))
       }));
   }
 }

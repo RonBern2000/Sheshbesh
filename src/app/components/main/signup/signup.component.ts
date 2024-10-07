@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { matchPasswordsValidator } from '../../../shared/validators/match-passwords.validator';
 import { Router } from '@angular/router';
 import { AuthUserService } from '../../../services/auth-user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'signup-component',
@@ -29,9 +30,29 @@ export class SignupComponent implements OnInit {
 
   newUser: SignupUser = new SignupUser();
 
-  constructor(private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer:Renderer2, private fb: FormBuilder, private router:Router){}
+  constructor(private toastr: ToastrService, private authUser: AuthUserService,private userHttpService:UserHttpApiService, private renderer:Renderer2, private fb: FormBuilder, private router:Router){}
 
   ngOnInit(): void {
+    sessionStorage.clear();
+    this.authUser.clearUser();
+      this.userHttpService.isAuth().subscribe({
+      next: (res) => {
+        this.router.navigate(['/chatHub']);
+        this.toastr.success('Enjoy chatting!', 'We remember you', {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
+        this.authUser.setUser({
+          id: res.id,
+          username: res.username,
+          email: res.email
+        });
+      },
+      error: (error) => {
+        console.error('User is not authenticated', error);
+      }
+    });
+
     this.signupForm = this.fb.group({
       username: new FormControl<string>('',[
         Validators.required,

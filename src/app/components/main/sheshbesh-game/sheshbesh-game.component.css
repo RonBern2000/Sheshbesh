@@ -11,6 +11,13 @@
   justify-content: space-between;
 }
 
+.roomsBtn{
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
 .joinBtn{
   padding: 10px;
   width: 70px;
@@ -201,6 +208,7 @@
     border: 10px solid #8b6914;
     border-radius: 10px;
     width: 100px;
+    height: 460px;
 }
 
 .wBearing-off{

@@ -3,6 +3,8 @@ import * as signalR from '@microsoft/signalR';
 import { Observable, Subject, BehaviorSubject ,from} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Sheshbesh } from '../shared/models/Sheshbesh';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -21,9 +23,9 @@ export class GameSignalRService {
   private leaverId = new Subject<string>();
   private otherId = new Subject<string>();
 
-  public playerCount = new BehaviorSubject<{ [key: string]: number }>({});
+  private playerCount = new BehaviorSubject<{ [key: string]: number }>({});
 
-  constructor() {
+  constructor(private router:Router, private toastr: ToastrService) {
     this.createConnection();
   }
 
@@ -36,9 +38,36 @@ export class GameSignalRService {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    this.hubConnection.on('UpdatePlayerCount', (roomName: string, count: number) => {
-      const currentCounts = this.playerCount.getValue();
-      this.playerCount.next({ ...currentCounts, [roomName]: count });
+
+    this.hubConnection.on('Unauthorized', (message: string) => {
+      this.router.navigate(['']);
+      this.toastr.error("Please log in first...", message, {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
+    });
+    this.hubConnection.on('GameWon',(wonPlayer:string)=>{
+      this.router.navigate(['/chatHub']);
+      this.toastr.success("White Player, try better next time", `Player ${wonPlayer} Won!!!`, {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
+    });
+
+    this.hubConnection.on('OpponentCrashed',()=>{
+      this.router.navigate(['/chatHub']);
+      this.toastr.error("You are redirected to the chatHub", `Your opponent crashed`, {
+            positionClass: 'toast-bottom-right',
+            closeButton: true,
+          });
+    });
+
+    this.hubConnection.on('UpdatePlayerCount', (roomPlayerCount: { [key: string]: number }) => {
+      this.playerCount.next(roomPlayerCount);
+    });
+
+    this.hubConnection.on('ReceiveCurrentPlayerCount', (roomPlayerCount: { [key: string]: number }) => {
+      this.playerCount.next(roomPlayerCount);
     });
     
     this.hubConnection.on('PlayerJoined', (id:string) => {
@@ -128,6 +157,14 @@ export class GameSignalRService {
         });
       }
     });
+  }
+
+  requestCurrentPlayerCounts(): void {
+    this.hubConnection.invoke('GetCurrentPlayerCounts').catch(err => console.error(err));
+  }
+
+  getPlayerCount(): Observable<{ [key: string]: number }> {
+    return this.playerCount.asObservable();
   }
 
   receiveGameState(): Observable<Sheshbesh | null> {
