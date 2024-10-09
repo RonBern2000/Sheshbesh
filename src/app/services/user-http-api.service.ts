@@ -39,7 +39,7 @@ export class UserHttpApiService {
   }
 
   createUser(newUser: SignupUser):Observable<any>{
-    return this.http.post<void>(`${this.apiUrl}/signup`,newUser,{ withCredentials: true})
+    return this.http.post<any>(`${this.apiUrl}/signup`,newUser,{withCredentials: true})
     .pipe(catchError((error) => {
         return throwError(()=> new Error(`User Not created, ${error.message}`)) 
       }));

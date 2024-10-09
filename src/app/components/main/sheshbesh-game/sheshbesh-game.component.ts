@@ -258,6 +258,10 @@ export class SheshbeshGameComponent implements OnInit, OnDestroy, AfterViewCheck
     this.hasPressedLeaveRoom = false;
   }
 
+  navToChat(){
+    this.router.navigate(['chatHub']);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.gameSignalRService.disconnect();

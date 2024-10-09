@@ -16,15 +16,32 @@
   padding: 20px;
   margin-top: 10px;
   border-radius: 10px;
+  background-color: #ffffff24;
 }
 
 .joinBtn{
   padding: 10px;
   width: 70px;
   border-radius: 5px;
+  background: #947351;
+  border: #6f5131 solid;
+  color: white;
+  font-weight: bold;
+}
+
+.backToChat{
+  padding: 10px;
+  width: 100px;
+  border-radius: 5px;
   border: solid #2476f1;
   background: #2476f1;
   color: white;
+}
+
+.backTochatContainer{
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
 }
 
 .leaveBtn{
