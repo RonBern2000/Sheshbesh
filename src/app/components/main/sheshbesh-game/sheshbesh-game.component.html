@@ -72,6 +72,6 @@
 </div>
 </div>
 </div>
-<div class="backTochatContainer">
+<div *ngIf="gameState" class="backTochatContainer">
   <button class="backToChat" (click)="navToChat()">Back to chatHub</button>
 </div>
